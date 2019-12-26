@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Metric, AnalyticsImplementation } from "./analytics-demo-interface";
 import { AnalyticsService } from "../services/analytics-service.service";
 
 @NgModule({
@@ -9,7 +9,20 @@ import { AnalyticsService } from "../services/analytics-service.service";
     CommonModule
   ],
   providers: [
-    AnalyticsService
+    {
+      provide: AnalyticsService,
+      useFactory() {
+        
+        const loggingImplementation: AnalyticsImplementation = {
+          recordEvent: (metric: Metric): void => {
+            console.log('The metric is:, metric');
+          }
+        };
+        
+        return new AnalyticsService(loggingImplementation);
+      }
+
+    }
   ]
 })
 export class AnalyticsDemoModule { }
